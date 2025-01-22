@@ -1,3 +1,12 @@
+/*** 
+ * @Author       : stoneBeast
+ * @Date         : 2025-01-22 10:14:12
+ * @Encoding     : UTF-8
+ * @LastEditors  : stoneBeast
+ * @LastEditTime : 2025-01-22 11:00:42
+ * @Description  : 通用链表管理工具
+ */
+
 #include <stdlib.h>
 #include <string.h>
 

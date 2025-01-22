@@ -1,3 +1,12 @@
+/*
+ * @Author       : stoneBeast
+ * @Date         : 2025-01-21 16:29:16
+ * @Encoding     : UTF-8
+ * @LastEditors  : stoneBeast
+ * @LastEditTime : 2025-01-22 10:58:45
+ * @Description  : 声明需要实现的硬件接口
+ */
+
 #ifndef __HARDWARE_H
 #define __HARDWARE_H
 

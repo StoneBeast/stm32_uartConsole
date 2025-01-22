@@ -4,7 +4,7 @@
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
  * @LastEditTime : 2025-01-21 17:39:54
- * @Description  : 
+ * @Description  : 可移植层，针对不同的平台实现规定的硬件api
  */
 
 #include "stm32f10x.h"

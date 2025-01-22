@@ -1,3 +1,12 @@
+/*
+ * @Author       : stoneBeast
+ * @Date         : 2025-01-21 16:35:23
+ * @Encoding     : UTF-8
+ * @LastEditors  : stoneBeast
+ * @LastEditTime : 2025-01-22 10:58:30
+ * @Description  : 存放硬件的某些配置项，但配置项也是根据特定的平台来定义的，没有做到真正的完全解耦
+ */
+
 #ifndef __CONFIG_H
 #define __CONFIG_H
 

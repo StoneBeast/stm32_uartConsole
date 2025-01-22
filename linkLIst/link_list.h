@@ -4,8 +4,9 @@
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
  * @LastEditTime : 2025-01-22 10:26:12
- * @Description  : 
+ * @Description  : 通用链表管理工具
  */
+
 #ifndef __LINK_LIST_H_
 #define __LINK_LIST_H_
 

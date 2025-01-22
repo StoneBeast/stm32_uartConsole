@@ -1,3 +1,12 @@
+/*
+ * @Author       : stoneBeast
+ * @Date         : 2025-01-21 16:25:53
+ * @Encoding     : UTF-8
+ * @LastEditors  : stoneBeast
+ * @LastEditTime : 2025-01-22 10:59:33
+ * @Description  : 存放一些终端操作定义
+ */
+
 #ifndef __CONSOLE_H
 #define __CONSOLE_H
 
