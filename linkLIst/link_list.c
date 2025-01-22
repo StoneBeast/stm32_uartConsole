@@ -9,6 +9,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include "link_list.h"
 
 typedef struct link_node
 {

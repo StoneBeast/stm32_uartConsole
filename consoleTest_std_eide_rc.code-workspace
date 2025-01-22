@@ -6,6 +6,9 @@
     ],
     "settings": {
         "files.associations": {
+            "*.cjson": "jsonc",
+            "*.wxss": "css",
+            "*.wxs": "javascript",
             ".eideignore": "ignore",
             "*.a51": "a51",
             "*.h": "c",
@@ -15,7 +18,8 @@
             "*.c++": "cpp",
             "*.cpp": "cpp",
             "*.cxx": "cpp",
-            "*.cc": "cpp"
+            "*.cc": "cpp",
+            "cstdlib": "c"
         },
         "files.autoGuessEncoding": true,
         "C_Cpp.default.configurationProvider": "cl.eide",

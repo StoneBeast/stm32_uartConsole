@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:25:53
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 10:59:33
+ * @LastEditTime : 2025-01-22 11:08:31
  * @Description  : 存放一些终端操作定义
  */
 
@@ -68,7 +68,7 @@ typedef struct
 {
     char task_name[TASK_NAME_LEN];
     char task_desc[TASK_DESC_LEN];
-    void* (*task_func)(void*);
+    int (*task_func)(int argc, char* argv[]);
 }Task_t;
 
 extern link_list_manager* g_console_task_list;

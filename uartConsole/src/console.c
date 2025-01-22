@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:25:45
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 11:02:36
+ * @LastEditTime : 2025-01-22 11:20:28
  * @Description  : 串口终端程序的主要逻辑实现
  */
 
@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdarg.h>
 #include "link_list.h"
+#include "task.h"
 
 console_struct g_console;
 link_list_manager *g_console_task_list;
@@ -52,9 +53,11 @@ void console_start(void)
 {
     uint8_t temp_buffer[BUFFER_LEN] = { 0 };
     uint16_t temp_len = 0;
+    int task_ret = 0;
 
     init_console_struct();
     g_console_task_list = link_list_manager_get();
+    add_default_task();
 
     console_out("");
 
@@ -159,7 +162,12 @@ void console_start(void)
         if (g_console.edit_flag)
         {
 
-            PRINTF("submit: %s\r\n", g_console.submit_buffer);
+            // PRINTF("submit: %s\r\n", g_console.submit_buffer);
+            task_ret = task_handler(g_console.submit_buffer, g_console.submit_len);
+            if (task_ret == -1)
+            {
+                PRINTF("command not found\r\n");
+            }
             g_console.edit_flag = 0;
             g_console.edit_len = 0;
             CONSOLE_TITLE();
