@@ -1,0 +1,29 @@
+/*
+ * @Author       : stoneBeast
+ * @Date         : 2025-01-22 10:14:12
+ * @Encoding     : UTF-8
+ * @LastEditors  : stoneBeast
+ * @LastEditTime : 2025-01-22 10:26:12
+ * @Description  : 
+ */
+#ifndef __LINK_LIST_H_
+#define __LINK_LIST_H_
+
+typedef void* link_list_handle_t;
+
+typedef struct
+{
+    link_list_handle_t list;
+    short (*add2list)(link_list_handle_t list,
+                      void *node,
+                      unsigned short node_size,
+                      void *id,
+                      unsigned short id_len);
+    void *(*find_by_index)(link_list_handle_t list, short index);
+    void *(*find_by_id)(link_list_handle_t list, void *id);
+    void  (*delete_by_id)(link_list_handle_t list, void *id);
+} link_list_manager;
+
+link_list_manager *link_list_manager_get(void);
+
+#endif
