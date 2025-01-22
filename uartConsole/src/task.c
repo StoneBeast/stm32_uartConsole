@@ -3,7 +3,7 @@
  * @Date         : 2025-01-22 10:41:13
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 14:31:01
+ * @LastEditTime : 2025-01-22 16:29:26
  * @Description  : 实现任务管理
  */
 
@@ -16,7 +16,12 @@ static void free_argv(int argc, char **argv);
 
 static int help_task(int argc, char *argv[])
 {
-    PRINTF("help task\r\n");
+    PRINTF("\033[1m%-10s%s\033[0m\r\n", "task", "task description");
+    for (uint16_t i = 0; i < g_console_task_list->node_number; i++)
+    {
+        PRINTF("%-10s%s\r\n", ((Task_t *)g_console_task_list->find_by_index(g_console_task_list->list, i))->task_name, ((Task_t *)g_console_task_list->find_by_index(g_console_task_list->list, i))->task_desc);
+    }
+    
     return 1;
 }
 
@@ -32,7 +37,7 @@ void add_default_task(void)
 
     while (strlen(default_task[i].task_name) != 0)
     {
-        g_console_task_list->add2list(g_console_task_list->list, &default_task[i], sizeof(Task_t), default_task[i].task_name, strlen(default_task[i].task_name));
+        g_console_task_list->add2list(&(g_console_task_list->list), &default_task[i], sizeof(Task_t), default_task[i].task_name, strlen(default_task[i].task_name));
         i++;
     }
     

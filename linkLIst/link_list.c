@@ -3,7 +3,7 @@
  * @Date         : 2025-01-22 10:14:12
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 11:00:42
+ * @LastEditTime : 2025-01-22 16:13:06
  * @Description  : 通用链表管理工具
  */
 
@@ -21,14 +21,14 @@ typedef struct link_node
     struct link_node *next;
 } link_list;
 
-static short link_list_add(link_list_handle_t list, 
+static short link_list_add(link_list_handle_t *list, 
                            void *node, 
                            unsigned short node_size,
                            void *id, 
                            unsigned short id_len)
 {
     link_list *temp_node = (link_list *)malloc(sizeof(struct link_node));
-    link_list *link_p = (link_list *)list;
+    link_list *link_p = (link_list *)(*list);
 
     if (link_p->next == NULL)
     {
@@ -49,6 +49,7 @@ static short link_list_add(link_list_handle_t list,
 
     temp_node->next = link_p->next;
     link_p->next = temp_node;
+    ((link_list_manager *)list)->node_number++;
 
     return temp_node->index;
 }
@@ -101,9 +102,9 @@ static void *link_list_find_by_id(link_list_handle_t list, void *id)
     }
 }
 
-static void link_list_delete_by_id(link_list_handle_t list, void *id)
+static void link_list_delete_by_id(link_list_handle_t *list, void *id)
 {
-    link_list *list_p = (link_list *)list;
+    link_list* list_p = (link_list*)(*list);
 
     if (list_p->next == NULL)
     {
@@ -120,6 +121,8 @@ static void link_list_delete_by_id(link_list_handle_t list, void *id)
                 node_p->next = node_p->next->next;
 
                 free(temp_node);
+
+                ((link_list_manager*)list)->node_number--;
 
                 return ;
             }
@@ -140,6 +143,7 @@ link_list_manager *link_list_manager_get(void)
 
     manager->list = (link_list_handle_t *)list;
 
+    manager->node_number = 0;
     manager->add2list = link_list_add;
     manager->find_by_index = link_list_find_by_index;
     manager->find_by_id = link_list_find_by_id;
