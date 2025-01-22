@@ -1,3 +1,12 @@
+/*** 
+ * @Author       : stoneBeast
+ * @Date         : 2025-01-21 16:25:45
+ * @Encoding     : UTF-8
+ * @LastEditors  : stoneBeast
+ * @LastEditTime : 2025-01-22 11:02:36
+ * @Description  : 串口终端程序的主要逻辑实现
+ */
+
 #include "hardware.h"
 #include "console.h"
 #include <stdio.h>
