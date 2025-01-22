@@ -29,6 +29,9 @@
 #define CONSOLE_IT_IDLE USART_IT_IDLE
 #define CONSOLE_UART_IRQ_HANDLER USART1_IRQHandler
 
+#define TASK_NAME_LEN           32
+#define TASK_DESC_LEN           256
+
 extern volatile uint32_t g_Ticks;
 
 #endif // !__CONFIG_H

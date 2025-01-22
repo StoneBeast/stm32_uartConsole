@@ -10,6 +10,8 @@
 #ifndef __TASK_H_
 #define __TASK_H_
 
+#include "uartConsole.h"
+
 void add_default_task(void);
 int task_handler(uint8_t* submit, uint16_t submit_len);
 

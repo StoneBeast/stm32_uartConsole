@@ -13,8 +13,6 @@
 #include "link_list.h"
 
 #define BUFFER_LEN              256
-#define TASK_NAME_LEN           32
-#define TASK_DESC_LEN           256
 
 
 #define ASSERENT_KEY(buf, key)  (memcmp(buf, key, strlen(key)) == 0)
@@ -63,13 +61,6 @@ typedef struct
     uint8_t edit_buffer_changed_flag;   /* 编辑缓存改变标志 */
     uint8_t delete_flag;                /* 删除标志 */
 }console_struct;
-
-typedef struct 
-{
-    char task_name[TASK_NAME_LEN];
-    char task_desc[TASK_DESC_LEN];
-    int (*task_func)(int argc, char* argv[]);
-}Task_t;
 
 extern link_list_manager* g_console_task_list;
 

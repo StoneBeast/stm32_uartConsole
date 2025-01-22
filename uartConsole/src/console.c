@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:25:45
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 11:20:28
+ * @LastEditTime : 2025-01-22 16:51:26
  * @Description  : 串口终端程序的主要逻辑实现
  */
 
@@ -49,6 +49,12 @@ void init_hardware(void)
     enable_uart_interrupt();
 }
 
+void init_console_task(void)
+{
+    g_console_task_list = link_list_manager_get();
+    add_default_task();
+}
+
 void console_start(void)
 {
     uint8_t temp_buffer[BUFFER_LEN] = { 0 };
@@ -56,8 +62,8 @@ void console_start(void)
     int task_ret = 0;
 
     init_console_struct();
-    g_console_task_list = link_list_manager_get();
-    add_default_task();
+    // g_console_task_list = link_list_manager_get();
+    // add_default_task();
 
     console_out("");
 
@@ -138,7 +144,6 @@ void console_start(void)
                     g_console.cursor = 0;
                     g_console.edit_flag = 1;
                     CONSOLE_NEW_LINE();
-                    // CONSOLE_TITLE();
                 }
             }
 
@@ -162,11 +167,10 @@ void console_start(void)
         if (g_console.edit_flag)
         {
 
-            // PRINTF("submit: %s\r\n", g_console.submit_buffer);
             task_ret = task_handler(g_console.submit_buffer, g_console.submit_len);
             if (task_ret == -1)
             {
-                PRINTF("command not found\r\n");
+                PRINTF("command not found, type 'help' to get more info\r\n");
             }
             g_console.edit_flag = 0;
             g_console.edit_len = 0;
@@ -194,4 +198,7 @@ void CONSOLE_UART_IRQ_HANDLER(void)
     }
 }
 
-// void register_task()
+void console_task_register(Task_t* task)
+{
+    g_console_task_list->add2list(&(g_console_task_list->list), task, sizeof(Task_t), task->task_name, strlen(task->task_name));
+}

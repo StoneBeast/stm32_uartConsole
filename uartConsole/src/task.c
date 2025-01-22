@@ -3,7 +3,7 @@
  * @Date         : 2025-01-22 10:41:13
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 16:29:26
+ * @LastEditTime : 2025-01-22 16:50:45
  * @Description  : 实现任务管理
  */
 
@@ -11,6 +11,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "task.h"
 
 static void free_argv(int argc, char **argv);
 
