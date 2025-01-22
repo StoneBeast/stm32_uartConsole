@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:25:45
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 16:51:26
+ * @LastEditTime : 2025-01-22 17:35:48
  * @Description  : 串口终端程序的主要逻辑实现
  */
 
@@ -15,9 +15,13 @@
 #include "link_list.h"
 #include "task.h"
 
-console_struct g_console;
-link_list_manager *g_console_task_list;
+console_struct g_console;                   /* 全局console结构体 */
+link_list_manager *g_console_task_list;     /* 全局taks链表 */
 
+/*** 
+ * @brief 初始化console结构体
+ * @return [void]
+ */
 static void init_console_struct(void)
 {
     g_console.edit_frame_flag = 0;
@@ -31,8 +35,14 @@ static void init_console_struct(void)
     g_console.delete_flag = 0;
 }
 
+/*** 
+ * @brief 带有标题的输出，本质是对printf的再包装
+ * @param __format [char*]   模板字符串 
+ * @return [void]
+ */
 static void console_out(const char* __format, ...)
 {
+    /* 先输出标题 */
     CONSOLE_TITLE();
     va_list args;
     va_start(args, __format);
@@ -41,6 +51,10 @@ static void console_out(const char* __format, ...)
     fflush(stdout);
 }
 
+/*** 
+ * @brief 初始化使用到的硬件
+ * @return [void]
+ */
 void init_hardware(void)
 {
     init_systick();
@@ -49,27 +63,36 @@ void init_hardware(void)
     enable_uart_interrupt();
 }
 
+/*** 
+ * @brief 初始化task机制
+ * @return [void]
+ */
 void init_console_task(void)
 {
+    // TODO: 从console_start中拆分出来本质是为task_register预留钩子，之后可以修改为其他机制
     g_console_task_list = link_list_manager_get();
     add_default_task();
 }
 
+/*** 
+ * @brief 启动主程序
+ * @return [void]
+ */
 void console_start(void)
 {
-    uint8_t temp_buffer[BUFFER_LEN] = { 0 };
-    uint16_t temp_len = 0;
-    int task_ret = 0;
+    uint8_t temp_buffer[BUFFER_LEN] = { 0 };    /* 暂时存放接收到的数据 */
+    uint16_t temp_len = 0;                      /* 接收的数据的长度 */
+    int task_ret = 0;                           /* 接收task执行的结果 */
 
+    /* 初始胡console_struct */
     init_console_struct();
-    // g_console_task_list = link_list_manager_get();
-    // add_default_task();
 
+    /* 打印title */
     console_out("");
 
-    while (1)
+    while (1)   /* 循环判断标志位 */
     {
-        if (g_console.edit_frame_flag)
+        if (g_console.edit_frame_flag)  /* 一帧数据帧接收完成 */
         {
             /* 马上将数据取出，并复位标志位 */
             memcpy(temp_buffer, g_console.edit_frame, g_console.edit_frame_len+1);
@@ -137,6 +160,7 @@ void console_start(void)
                 }
                 else if (temp_buffer[0] == KEY_ENTER) /* 回车键 */
                 {
+                    /* 将当前的edit_buffer存放到submit_buffer中，并置位edit_flag */
                     memcpy(g_console.submit_buffer, g_console.edit_buffer, g_console.edit_len);
                     g_console.submit_buffer[g_console.edit_len] = '\0';
                     g_console.submit_len = g_console.edit_len;
@@ -148,7 +172,7 @@ void console_start(void)
             }
 
         }
-        if (g_console.edit_buffer_changed_flag)
+        if (g_console.edit_buffer_changed_flag) /* edit_buffer发生更改 */
         {
             if ((g_console.cursor == g_console.edit_len) && !g_console.delete_flag) /* 追加 */
             {
@@ -164,9 +188,9 @@ void console_start(void)
             }
             g_console.edit_buffer_changed_flag = 0;
         }
-        if (g_console.edit_flag)
+        if (g_console.edit_flag)    /* 提交输入 */
         {
-
+            /* 调用处理函数 */
             task_ret = task_handler(g_console.submit_buffer, g_console.submit_len);
             if (task_ret == -1)
             {
@@ -179,6 +203,10 @@ void console_start(void)
     }
 }
 
+/*** 
+ * @brief 串口中断函数，函数名是由宏定义替换，保证可移植性
+ * @return [void]
+ */
 void CONSOLE_UART_IRQ_HANDLER(void)
 {
     char rc;
@@ -190,7 +218,7 @@ void CONSOLE_UART_IRQ_HANDLER(void)
         g_console.edit_frame[g_console.edit_frame_len] = '\0';
     }
 
-    if (get_console_uart_it_flag(CONSOLE_IT_IDLE) != 0)
+    if (get_console_uart_it_flag(CONSOLE_IT_IDLE) != 0) /* idle中断触发，完成一帧数据帧接收 */
     {
         g_console.edit_frame_flag = 1;
         
@@ -198,6 +226,11 @@ void CONSOLE_UART_IRQ_HANDLER(void)
     }
 }
 
+/*** 
+ * @brief 注册task
+ * @param task [Task_t*]    
+ * @return [void]
+ */
 void console_task_register(Task_t* task)
 {
     g_console_task_list->add2list(&(g_console_task_list->list), task, sizeof(Task_t), task->task_name, strlen(task->task_name));

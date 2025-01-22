@@ -12,11 +12,12 @@
 
 #include "config.h"
 
+/* task结构体 */
 typedef struct 
 {
-    char task_name[TASK_NAME_LEN];
-    char task_desc[TASK_DESC_LEN];
-    int (*task_func)(int argc, char* argv[]);
+    char task_name[TASK_NAME_LEN];              /* task名称 */
+    char task_desc[TASK_DESC_LEN];              /* task描述 */
+    int (*task_func)(int argc, char* argv[]);   /* task函数 */
 }Task_t;
 
 void init_hardware(void);

@@ -12,14 +12,16 @@
 
 #include "config.h"
 
-void init_systick(void);
-void init_status_led(void);
-void init_console_uart(void);
-void enable_uart_interrupt(void);
+#define __USER
 
-int get_console_uart_it_flag(uint16_t it);
-uint8_t get_console_uart_data(void);
-void clear_console_uart_idel_it_flag(void);
+void __USER init_systick(void);
+void __USER init_status_led(void);
+void __USER init_console_uart(void);
+void __USER enable_uart_interrupt(void);
+
+int __USER get_console_uart_it_flag(uint16_t it);
+uint8_t __USER get_console_uart_data(void);
+void __USER clear_console_uart_idel_it_flag(void);
 
 void delay_ms(uint32_t ms);
 

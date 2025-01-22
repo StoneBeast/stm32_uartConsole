@@ -10,12 +10,12 @@
 #include "stm32f10x.h"
 #include "config.h"
 
-void init_systick(void)
+void __USER init_systick(void)
 {
     SysTick_Config(SystemCoreClock / TICKS_PER_SECOND);
 }
 
-void init_status_led(void)
+void __USER init_status_led(void)
 {
     RCC_APB2PeriphClockCmd(STATUS_LED_RCC, ENABLE);
 
@@ -26,7 +26,7 @@ void init_status_led(void)
     GPIO_Init(STATUS_LED_PORT, &gpioDef);
 }
 
-void init_console_uart(void)
+void __USER init_console_uart(void)
 {
     GPIO_InitTypeDef gpioDef;
     USART_InitTypeDef usartDef;
@@ -53,7 +53,7 @@ void init_console_uart(void)
     USART_Cmd(CONSOLE_UART, ENABLE);
 }
 
-void enable_uart_interrupt(void)
+void __USER enable_uart_interrupt(void)
 {
     NVIC_InitTypeDef nvicDef;
     nvicDef.NVIC_IRQChannel = CONSOLE_UART_IRQ;
@@ -66,17 +66,17 @@ void enable_uart_interrupt(void)
     USART_ITConfig(CONSOLE_UART, USART_IT_IDLE, ENABLE);
 }
 
-int get_console_uart_it_flag(uint16_t it)
+int __USER get_console_uart_it_flag(uint16_t it)
 {
     return USART_GetITStatus(CONSOLE_UART, it);
 }
 
-unsigned char get_console_uart_data(void)
+unsigned char __USER get_console_uart_data(void)
 {
     return USART_ReceiveData(CONSOLE_UART);
 }
 
-void clear_console_uart_idel_it_flag(void)
+void __USER clear_console_uart_idel_it_flag(void)
 {
     uint32_t temp;
     temp = CONSOLE_UART->SR;

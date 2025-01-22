@@ -62,6 +62,6 @@ typedef struct
     uint8_t delete_flag;                /* 删除标志 */
 }console_struct;
 
-extern link_list_manager* g_console_task_list;
+extern link_list_manager* g_console_task_list;  /* 全局task链表 */
 
 #endif // !__CONSOLE_H
