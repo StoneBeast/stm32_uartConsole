@@ -8,6 +8,7 @@
  */
 
 #include "stm32f10x.h"
+#include "hardware.h"
 #include "config.h"
 
 void __USER init_systick(void)
