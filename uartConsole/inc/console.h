@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:25:53
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 11:08:31
+ * @LastEditTime : 2025-01-23 17:20:38
  * @Description  : 存放一些终端操作定义
  */
 
@@ -29,7 +29,7 @@
 #define KEY_END             "\x1b\x5b\x46"      /* [end] key: 0x1b 0x5b 0x46 */
 #define KEY_DELETE          "\x1b\x5b\x33\x7e"  /* [delete] key: 0x1b 0x5b 0x33 0x7e */
 
-#define CONSOLE_TITLE_TEXT          "root >"
+#define CONSOLE_TITLE_TEXT          "root > "
 #define CONSOLE_TITLE_COLORED       "\033[0;32;1m%s\033[0m"
 #define CONSOLE_TITLE()               PRINTF(CONSOLE_TITLE_COLORED, CONSOLE_TITLE_TEXT)
 
