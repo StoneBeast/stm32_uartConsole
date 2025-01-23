@@ -6,7 +6,7 @@
     "src",
     "hal",
     "uartConsole",
-    "linkLIst"
+    "linkList"
   ],
   "outDir": "build",
   "deviceName": "STM32F102C8",
@@ -103,7 +103,7 @@
           "hal/STM32F10x_StdPeriph_Driver/src",
           "uartConsole/inc",
           "uartConsole",
-          "linkLIst"
+          "linkList"
         ],
         "libList": [],
         "defineList": [
