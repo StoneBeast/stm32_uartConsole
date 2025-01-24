@@ -3,7 +3,7 @@
  * @Date         : 2025-01-22 10:41:13
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 16:50:45
+ * @LastEditTime : 2025-01-24 17:41:14
  * @Description  : 实现任务管理
  */
 
@@ -56,7 +56,7 @@ void add_default_task(void)
 
     while (strlen(default_task[i].task_name) != 0)
     {
-        g_console_task_list->add2list(&(g_console_task_list->list), &default_task[i], sizeof(Task_t), default_task[i].task_name, strlen(default_task[i].task_name));
+        console_task_register(&default_task[i]);
         i++;
     }
     
