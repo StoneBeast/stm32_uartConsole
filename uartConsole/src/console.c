@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:25:45
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-24 10:59:43
+ * @LastEditTime : 2025-01-24 14:09:18
  * @Description  : 串口终端程序的主要逻辑实现
  */
 
@@ -14,6 +14,7 @@
 #include <stdarg.h>
 #include "link_list.h"
 #include "task.h"
+#include <stdlib.h>
 
  /*
      TODO: 添加后台任务机制
@@ -30,22 +31,6 @@ link_list_manager *g_console_task_list;     /* 全局taks链表 */
 static void init_console_struct(void)
 {
     memset(&g_console, 0, sizeof(console_struct));
-}
-
-/*** 
- * @brief 带有标题的输出，本质是对printf的再包装
- * @param __format [char*]   模板字符串 
- * @return [void]
- */
-static void console_out(const char* __format, ...)
-{
-    /* 先输出标题 */
-    CONSOLE_TITLE();
-    va_list args;
-    va_start(args, __format);
-    vprintf(__format, args);
-    va_end(args);
-    fflush(stdout);
 }
 
 /*** 
@@ -85,7 +70,7 @@ void console_start(void)
     init_console_struct();
 
     /* 打印title */
-    console_out("");
+    CONSOLE_OUT("");
 
     while (1)   /* 循环判断标志位 */
     {
@@ -218,7 +203,7 @@ RePrint:
                 g_console.delete_flag = 0;
                 CURSOR_INVISIBLE();
                 CLEAR_LINE();
-                CONSOLE_TITLE_LINE(g_console.edit_buffer, g_console.cursor+1+strlen(CONSOLE_TITLE_TEXT));
+                CONSOLE_TITLE_LINE(g_console.edit_buffer, g_console.cursor);
                 CURSOR_VISIBLE();
             }
             g_console.edit_buffer_changed_flag = 0;
@@ -278,4 +263,28 @@ void CONSOLE_UART_IRQ_HANDLER(void)
 void console_task_register(Task_t* task)
 {
     g_console_task_list->add2list(&(g_console_task_list->list), task, sizeof(Task_t), task->task_name, strlen(task->task_name));
+}
+
+/*** 
+ * @brief 模板打印，用法与printf一致，但是不依赖标准输出
+ * @param fmt [char*]    
+ * @return [void]
+ */
+void console_printf(const char* fmt, ...)
+{
+    uint16_t i = 0;
+    char *buffer = (char *)malloc(strlen(fmt) + 128);
+
+    va_list args;
+    va_start(args, fmt);
+    vsprintf(buffer, fmt, args);
+    va_end(args);
+
+    while (buffer[i] != '\0')
+    {
+        console_uart_send_data(buffer[i]);
+        i++;
+    }
+
+    free(buffer);
 }

@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:30:58
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-21 17:39:54
+ * @LastEditTime : 2025-01-24 13:58:15
  * @Description  : 可移植层，针对不同的平台实现规定的硬件api
  */
 
@@ -84,16 +84,10 @@ void __USER clear_console_uart_idel_it_flag(void)
     temp |= CONSOLE_UART->DR;
 }
 
-int _write(int fd, char* ptr, int len) 
+void __USER console_uart_send_data(uint8_t data)
 {
-    while (len--)
-    {
-            USART_SendData(CONSOLE_UART, *ptr);
-            while (USART_GetFlagStatus(CONSOLE_UART, USART_FLAG_TXE) == RESET);
-            ptr++;
-    }
-
-    return len;
+    USART_SendData(CONSOLE_UART, data);
+    while (USART_GetFlagStatus(CONSOLE_UART, USART_FLAG_TXE) == RESET);
 }
 
 void delay_ms(uint32_t ms)

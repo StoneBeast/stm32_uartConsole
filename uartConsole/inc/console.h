@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:25:53
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-23 17:20:38
+ * @LastEditTime : 2025-01-24 14:12:54
  * @Description  : 存放一些终端操作定义
  */
 
@@ -16,8 +16,7 @@
 
 
 #define ASSERENT_KEY(buf, key)  (memcmp(buf, key, strlen(key)) == 0)
-#define PRINTF(...)             printf(__VA_ARGS__); \
-                                fflush(stdout)
+#define PRINTF(...)             console_printf(__VA_ARGS__)
 
 #define KEY_UP              "\x1b\x5b\x41"      /* [up] key: 0x1b 0x5b 0x41 */
 #define KEY_DOWN            "\x1b\x5b\x42"      /* [down] key: 0x1b 0x5b 0x42 */
@@ -31,10 +30,12 @@
 
 #define CONSOLE_TITLE_TEXT          "root > "
 #define CONSOLE_TITLE_COLORED       "\033[0;32;1m%s\033[0m"
-#define CONSOLE_TITLE()               PRINTF(CONSOLE_TITLE_COLORED, CONSOLE_TITLE_TEXT)
+#define CONSOLE_TITLE()             PRINTF(CONSOLE_TITLE_COLORED, CONSOLE_TITLE_TEXT)
+#define CONSOLE_OUT(...)            CONSOLE_TITLE(); \
+                                    PRINTF(__VA_ARGS__)
 
 #define CLEAR_LINE()                PRINTF("\r\033[K")
-#define CONSOLE_TITLE_LINE(s,c)     console_out("%s\033[%dG", s, c)
+#define CONSOLE_TITLE_LINE(s,c)     CONSOLE_OUT("%s\033[%dG", s, c+1+strlen(CONSOLE_TITLE_TEXT))
 #define CONSOLE_NEW_LINE()          PRINTF("\r\n")
 
 #define CURSOR_LEFT(x)              PRINTF("\033[%dD", x)
@@ -67,6 +68,8 @@ typedef struct
     uint8_t edit_buffer_changed_flag;   /* 编辑缓存改变标志 */
     uint8_t delete_flag;                /* 删除标志 */
 }console_struct;
+
+void console_printf(const char *fmt, ...);
 
 extern link_list_manager* g_console_task_list;  /* 全局task链表 */
 
