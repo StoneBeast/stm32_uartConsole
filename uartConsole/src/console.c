@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:25:45
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 17:35:48
+ * @LastEditTime : 2025-01-24 10:59:43
  * @Description  : 串口终端程序的主要逻辑实现
  */
 
@@ -15,6 +15,11 @@
 #include "link_list.h"
 #include "task.h"
 
+ /*
+     TODO: 添加后台任务机制
+     TODO: 优化解耦合逻辑
+  */
+
 console_struct g_console;                   /* 全局console结构体 */
 link_list_manager *g_console_task_list;     /* 全局taks链表 */
 
@@ -24,15 +29,7 @@ link_list_manager *g_console_task_list;     /* 全局taks链表 */
  */
 static void init_console_struct(void)
 {
-    g_console.edit_frame_flag = 0;
-    g_console.edit_frame_len = 0;
-    g_console.edit_flag = 0;
-    g_console.cursor = 0;
-    g_console.relog_flag = 0;
-    g_console.edit_len = 0;
-    g_console.submit_len = 0;
-    g_console.edit_buffer_changed_flag = 0;
-    g_console.delete_flag = 0;
+    memset(&g_console, 0, sizeof(console_struct));
 }
 
 /*** 
@@ -113,6 +110,37 @@ void console_start(void)
                     g_console.cursor--;
                     CURSOR_LEFT(1);
                 }
+                else if (ASSERENT_KEY(temp_buffer, KEY_UP))                                             /* UP键 */
+                {
+                    if ((g_console.history_len > 0) && (0 != strcmp((char*)(g_console.history_buffer), (char*)(g_console.edit_buffer)))) /* 历史记录不为空且当前输入不为空 */
+                    {
+
+                        memcpy(g_console.temp_edit_buffer, g_console.edit_buffer, g_console.edit_len+1);
+                        g_console.temp_edit_len = g_console.edit_len;
+
+                        memcpy(g_console.edit_buffer, g_console.history_buffer, g_console.history_len+1);
+                        g_console.edit_len = g_console.history_len;
+
+                        g_console.cursor = g_console.edit_len;
+                        g_console.edit_buffer_changed_flag = 1;
+                        g_console.history_flag = 1;
+                    }
+                }
+                else if (ASSERENT_KEY(temp_buffer, KEY_DOWN))                                           /* DOWN键 */
+                {
+                    if (0 != strcmp((char*)(g_console.temp_edit_buffer), (char*)(g_console.edit_buffer))) /* 临时记录不为空且当前输入不为空 */
+                    {
+                        memcpy(g_console.history_buffer, g_console.edit_buffer, g_console.edit_len + 1);
+                        g_console.history_len = g_console.edit_len;
+
+                        memcpy(g_console.edit_buffer, g_console.temp_edit_buffer, g_console.temp_edit_len+1);
+                        g_console.edit_len = g_console.temp_edit_len;
+
+                        g_console.cursor = g_console.edit_len;
+                        g_console.edit_buffer_changed_flag = 1;
+                        g_console.history_flag = 1;
+                    }
+                }
                 else if (ASSERENT_KEY(temp_buffer, KEY_HOME))                                           /* HOME键 */
                 {
                     if (g_console.cursor > 0)
@@ -164,6 +192,7 @@ void console_start(void)
                     memcpy(g_console.submit_buffer, g_console.edit_buffer, g_console.edit_len);
                     g_console.submit_buffer[g_console.edit_len] = '\0';
                     g_console.submit_len = g_console.edit_len;
+                    CLEAR_BUFFER(g_console.edit_buffer);
                     g_console.edit_len = 0;
                     g_console.cursor = 0;
                     g_console.edit_flag = 1;
@@ -174,12 +203,18 @@ void console_start(void)
         }
         if (g_console.edit_buffer_changed_flag) /* edit_buffer发生更改 */
         {
+            if (g_console.history_flag)
+            {
+                g_console.history_flag = 0;
+                goto RePrint;
+            }
             if ((g_console.cursor == g_console.edit_len) && !g_console.delete_flag) /* 追加 */
             {
                 PRINTF("%s", temp_buffer);
             }
             else    /* 插入或删除 */
             {
+RePrint:
                 g_console.delete_flag = 0;
                 CURSOR_INVISIBLE();
                 CLEAR_LINE();
@@ -190,6 +225,12 @@ void console_start(void)
         }
         if (g_console.edit_flag)    /* 提交输入 */
         {
+            if (g_console.submit_len > 0) /* 提交长度大于0 */
+            {
+                memcpy(g_console.history_buffer, g_console.submit_buffer, g_console.submit_len + 1);
+                g_console.history_len = g_console.submit_len;
+            }
+
             /* 调用处理函数 */
             task_ret = task_handler(g_console.submit_buffer, g_console.submit_len);
             if (task_ret == -1)
@@ -197,7 +238,10 @@ void console_start(void)
                 PRINTF("command not found, type 'help' to get more info\r\n");
             }
             g_console.edit_flag = 0;
+            CLEAR_BUFFER(g_console.edit_buffer);
             g_console.edit_len = 0;
+            CLEAR_BUFFER(g_console.temp_edit_buffer);
+            g_console.temp_edit_len = 0;
             CONSOLE_TITLE();
         }
     }

@@ -12,12 +12,6 @@
 
 volatile uint32_t g_Ticks = 0; 
 
-/* 
-    TODO: 添加后台任务机制
-    TODO: 完成上下方向键功能
-    TODO: 优化解耦合逻辑
- */
-
 int main(void)
 {
     init_hardware();

@@ -42,6 +42,8 @@
 #define CURSOR_INVISIBLE()          PRINTF("\033[?25l")
 #define CURSOR_VISIBLE()            PRINTF("\033[?25h")
 
+#define CLEAR_BUFFER(buf)           memset(buf, 0, strlen((char *)buf))
+
 typedef unsigned char uint8_t;
 typedef unsigned short uint16_t;
 
@@ -52,7 +54,11 @@ typedef struct
     uint8_t edit_buffer[BUFFER_LEN];    /* 用于保存提交之前当前输入、修改后的字符 */
     uint16_t edit_len;                  /* 编辑缓存长度 */
     uint8_t edit_flag;                  /* 编辑缓存标志 */
-    /* 预留历史输入 */
+    uint8_t history_buffer[BUFFER_LEN]; /* 历史输入缓存 */
+    uint16_t history_len;               /* 历史输入缓存长度 */
+    uint8_t history_flag;               /* 历史输入缓存标志 */
+    uint8_t temp_edit_buffer[BUFFER_LEN]; /* 临时编辑缓存 */
+    uint16_t temp_edit_len;             /* 临时编辑缓存长度 */
     uint16_t cursor;                    /* 光标位置 */
     uint8_t edit_frame[BUFFER_LEN];     /* 当前输入帧 */
     uint16_t edit_frame_len;            /* 当前输入帧长度 */
