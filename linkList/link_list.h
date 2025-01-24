@@ -10,6 +10,8 @@
 #ifndef __LINK_LIST_H_
 #define __LINK_LIST_H_
 
+#define MAX_LEN(a, b) ((a) > (b) ? (a) : (b))
+
 typedef void* link_list_handle_t;
 
 typedef struct
@@ -22,7 +24,7 @@ typedef struct
                       void *id,
                       unsigned short id_len);
     void *(*find_by_index)(link_list_handle_t list, short index);
-    void *(*find_by_id)(link_list_handle_t list, void *id);
+    void *(*find_by_id)(link_list_handle_t list, void *id, unsigned short id_len);
     void  (*delete_by_id)(link_list_handle_t *list, void *id);
 } link_list_manager;
 

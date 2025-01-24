@@ -109,7 +109,7 @@ int task_handler(uint8_t *submit, uint16_t submit_len)
     }
 
     /* 在链表中查找是否存在该task */
-    task = g_console_task_list->find_by_id(g_console_task_list->list, argv[0]);
+    task = g_console_task_list->find_by_id(g_console_task_list->list, argv[0], strlen(argv[0]));
     if (task != NULL)
     {
         task->task_func(argc, argv);
