@@ -32,10 +32,17 @@ static int help_task(int argc, char *argv[])
     return 1;
 }
 
+static int clear_task(int argc, char *argv[])
+{
+    CONSOLE_CLEAR();
+    return 1;
+}
+
 /* 默认加载任务列表，必须以全为空的成员结尾 */
 static Task_t default_task[] = 
 {
     {"help", "display help info", help_task},
+    {"clear", "clear console", clear_task},
     {"", "", NULL}
 };
 

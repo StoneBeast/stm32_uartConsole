@@ -42,6 +42,7 @@
 #define CURSOR_RIGHT(x)             PRINTF("\033[%dC", x)
 #define CURSOR_INVISIBLE()          PRINTF("\033[?25l")
 #define CURSOR_VISIBLE()            PRINTF("\033[?25h")
+#define CONSOLE_CLEAR()             PRINTF("\033[2J\033[0;0H")
 
 #define CLEAR_BUFFER(buf)           memset(buf, 0, strlen((char *)buf))
 
