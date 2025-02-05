@@ -73,5 +73,6 @@ typedef struct
 void console_printf(const char *fmt, ...);
 
 extern link_list_manager* g_console_task_list;  /* 全局task链表 */
+extern link_list_manager* g_console_bg_task_list;   /* 全局后台task链表 */
 
 #endif // !__CONSOLE_H

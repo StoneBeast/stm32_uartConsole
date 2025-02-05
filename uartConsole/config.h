@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:35:23
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 10:58:30
+ * @LastEditTime : 2025-02-05 10:25:56
  * @Description  : 存放硬件的某些配置项，但配置项也是根据特定的平台来定义的，没有做到真正的完全解耦
  */
 
@@ -28,6 +28,7 @@
 #define CONSOLE_IT_RXEN USART_IT_RXNE
 #define CONSOLE_IT_IDLE USART_IT_IDLE
 #define CONSOLE_UART_IRQ_HANDLER USART1_IRQHandler
+#define CONSOLE_TIMEBASE_HANDLER SysTick_Handler
 
 #define TASK_NAME_LEN           32
 #define TASK_DESC_LEN           256

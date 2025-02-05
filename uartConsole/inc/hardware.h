@@ -14,7 +14,7 @@
 
 #define __USER
 
-void __USER init_systick(void);
+void __USER init_timebase(void);
 void __USER init_status_led(void);
 void __USER init_console_uart(void);
 void __USER enable_uart_interrupt(void);
@@ -25,5 +25,6 @@ void __USER clear_console_uart_idel_it_flag(void);
 void __USER console_uart_send_data(uint8_t data);
 
 void delay_ms(uint32_t ms);
+void running_led_blink(void);
 
 #endif // !__HARDWARE_H

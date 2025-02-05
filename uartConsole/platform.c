@@ -11,7 +11,7 @@
 #include "hardware.h"
 #include "config.h"
 
-void __USER init_systick(void)
+void __USER init_timebase(void)
 {
     SysTick_Config(SystemCoreClock / TICKS_PER_SECOND);
 }
@@ -96,7 +96,7 @@ void delay_ms(uint32_t ms)
     while (g_Ticks - start < ms);
 }
 
-void led_blink(void)
+void running_led_blink(void)
 {
     GPIO_WriteBit(STATUS_LED_PORT, STATUS_LED_PIN, !GPIO_ReadOutputDataBit(STATUS_LED_PORT, STATUS_LED_PIN));
 }

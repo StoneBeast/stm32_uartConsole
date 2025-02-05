@@ -3,7 +3,7 @@
  * @Date         : 2025-01-22 10:14:12
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-22 16:13:06
+ * @LastEditTime : 2025-02-05 09:40:48
  * @Description  : 通用链表管理工具
  */
 
@@ -133,6 +133,27 @@ static void link_list_delete_by_id(link_list_handle_t *list, void *id)
     }
 }
 
+static void link_list_foreach(link_list_handle_t list, void (*func)(void* vendor_data))
+{
+    link_list *list_p = (link_list *)list;
+
+    if (list_p->next == NULL)
+    {
+        return;
+    }
+    else
+    {
+        link_list *node_p = list_p;
+        while (node_p->next != NULL)
+        {
+            func(node_p->next->vendor_data);
+            node_p = node_p->next;
+        }
+
+        return;
+    }
+}
+
 link_list_manager *link_list_manager_get(void)
 {
     link_list_manager *manager = (link_list_manager *)malloc(sizeof(link_list_manager));
@@ -148,6 +169,7 @@ link_list_manager *link_list_manager_get(void)
     manager->find_by_index = link_list_find_by_index;
     manager->find_by_id = link_list_find_by_id;
     manager->delete_by_id = link_list_delete_by_id;
+    manager->foreach = link_list_foreach;
 
     return manager;
 }

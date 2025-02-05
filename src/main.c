@@ -10,8 +10,6 @@
 #include "stm32f10x.h"
 #include "uartConsole.h"
 
-volatile uint32_t g_Ticks = 0; 
-
 int main(void)
 {
     init_hardware();

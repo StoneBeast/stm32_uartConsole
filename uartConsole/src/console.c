@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:25:45
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-24 14:09:18
+ * @LastEditTime : 2025-02-05 11:20:06
  * @Description  : 串口终端程序的主要逻辑实现
  */
 
@@ -17,12 +17,13 @@
 #include <stdlib.h>
 
  /*
-     TODO: 添加后台任务机制
      TODO: 优化解耦合逻辑
   */
 
 console_struct g_console;                   /* 全局console结构体 */
 link_list_manager *g_console_task_list;     /* 全局taks链表 */
+link_list_manager *g_console_bg_task_list;
+volatile uint32_t g_Ticks = 0;              /* 全局滴答计数 */
 
 /*** 
  * @brief 初始化console结构体
@@ -39,7 +40,7 @@ static void init_console_struct(void)
  */
 void init_hardware(void)
 {
-    init_systick();
+    init_timebase();
     init_status_led();
     init_console_uart();
     enable_uart_interrupt();
@@ -53,7 +54,9 @@ void init_console_task(void)
 {
     // TODO: 从console_start中拆分出来本质是为task_register预留钩子，之后可以修改为其他机制
     g_console_task_list = link_list_manager_get();
+    g_console_bg_task_list = link_list_manager_get();
     add_default_task();
+    add_default_bg_task();
 }
 
 /*** 
@@ -229,6 +232,9 @@ RePrint:
             g_console.temp_edit_len = 0;
             CONSOLE_TITLE();
         }
+
+        bg_task_handler();
+        
     }
 }
 
@@ -255,14 +261,9 @@ void CONSOLE_UART_IRQ_HANDLER(void)
     }
 }
 
-/*** 
- * @brief 注册task
- * @param task [Task_t*]    
- * @return [void]
- */
-void console_task_register(Task_t* task)
+void CONSOLE_TIMEBASE_HANDLER(void)
 {
-    g_console_task_list->add2list(&(g_console_task_list->list), task, sizeof(Task_t), task->task_name, strlen(task->task_name));
+    g_Ticks++;
 }
 
 /*** 

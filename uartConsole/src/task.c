@@ -3,7 +3,7 @@
  * @Date         : 2025-01-22 10:41:13
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-24 17:41:14
+ * @LastEditTime : 2025-02-05 11:14:03
  * @Description  : 实现任务管理
  */
 
@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "task.h"
+#include "hardware.h"
 
 static void free_argv(int argc, char **argv);
 
@@ -38,12 +39,24 @@ static int clear_task(int argc, char *argv[])
     return 1;
 }
 
+static int led_blink(int argc, char* argv[])
+{
+    running_led_blink();
+    return 1;
+}
+
 /* 默认加载任务列表，必须以全为空的成员结尾 */
 static Task_t default_task[] = 
 {
     {"help", "display help info", help_task},
     {"clear", "clear console", clear_task},
     {"", "", NULL}
+};
+
+static Bg_task_t default_bg_task[] = 
+{
+    {{"led_blink", "led blink task", led_blink}, 500, 0},
+    {{"", "", NULL}, 0, 0}
 };
 
 /*** 
@@ -60,6 +73,41 @@ void add_default_task(void)
         i++;
     }
     
+}
+
+/*** 
+ * @brief 初始化时加载默认后台task
+ * @return [void]
+ */
+void add_default_bg_task(void)
+{
+    uint16_t i = 0;
+
+    while (strlen(default_bg_task[i].task.task_name) != 0)
+    {
+        console_backgroung_task_register(&default_bg_task[i]);
+        i++;
+    }
+}
+
+/*** 
+ * @brief 注册task
+ * @param task [Task_t*]    
+ * @return [void]
+ */
+void console_task_register(Task_t* task)
+{
+    g_console_task_list->add2list(&(g_console_task_list->list), task, sizeof(Task_t), task->task_name, strlen(task->task_name));
+}
+
+/*** 
+ * @brief 注册后台task
+ * @return []
+ */
+void console_backgroung_task_register(Bg_task_t *bg_task)
+{
+    bg_task->time_until = bg_task->time_interval + g_Ticks;
+    g_console_bg_task_list->add2list(&(g_console_bg_task_list->list), bg_task, sizeof(Bg_task_t), bg_task->task.task_name, strlen(bg_task->task.task_name));
 }
 
 /*** 
@@ -129,6 +177,30 @@ int task_handler(uint8_t *submit, uint16_t submit_len)
         return -1;
     }
 
+}
+
+/*** 
+ * @brief 检查任务是否超时，并调用对应回调函数
+ * @param task_handle [void*]   任务句柄
+ * @return [void]
+ */
+static void task_timeout_handler(void* task_handle)
+{
+    Bg_task_t* bg_task = (Bg_task_t*)task_handle;
+    if (g_Ticks == bg_task->time_until)
+    {
+        bg_task->task.task_func(0, NULL);
+        bg_task->time_until = bg_task->time_interval + g_Ticks;
+    }
+}
+
+/*** 
+ * @brief 遍历链表，检查任务是否超时
+ * @return [void]
+ */
+void bg_task_handler(void)
+{
+    g_console_bg_task_list->foreach(g_console_bg_task_list->list, task_timeout_handler);
 }
 
 /*** 

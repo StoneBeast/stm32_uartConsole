@@ -13,6 +13,8 @@
 #include "uartConsole.h"
 
 void add_default_task(void);
+void add_default_bg_task(void);
 int task_handler(uint8_t* submit, uint16_t submit_len);
+void bg_task_handler(void);
 
 #endif // !__TASK_H_
