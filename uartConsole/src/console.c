@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:25:45
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-02-05 11:20:06
+ * @LastEditTime : 2025-02-05 18:44:40
  * @Description  : 串口终端程序的主要逻辑实现
  */
 
@@ -23,7 +23,6 @@
 console_struct g_console;                   /* 全局console结构体 */
 link_list_manager *g_console_task_list;     /* 全局taks链表 */
 link_list_manager *g_console_bg_task_list;
-volatile uint32_t g_Ticks = 0;              /* 全局滴答计数 */
 
 /*** 
  * @brief 初始化console结构体
@@ -263,7 +262,7 @@ void CONSOLE_UART_IRQ_HANDLER(void)
 
 void CONSOLE_TIMEBASE_HANDLER(void)
 {
-    g_Ticks++;
+    inc_ticks();
 }
 
 /*** 

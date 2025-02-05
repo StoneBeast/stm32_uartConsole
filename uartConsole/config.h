@@ -3,7 +3,7 @@
  * @Date         : 2025-01-21 16:35:23
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-02-05 10:25:56
+ * @LastEditTime : 2025-02-05 18:45:17
  * @Description  : 存放硬件的某些配置项，但配置项也是根据特定的平台来定义的，没有做到真正的完全解耦
  */
 
@@ -33,6 +33,8 @@
 #define TASK_NAME_LEN           32
 #define TASK_DESC_LEN           256
 
-extern volatile uint32_t g_Ticks;
+#define USE_PRIVATE_TICKS       1
+
+#define G_TICKS         get_ticks()
 
 #endif // !__CONFIG_H

@@ -106,7 +106,7 @@ void console_task_register(Task_t* task)
  */
 void console_backgroung_task_register(Bg_task_t *bg_task)
 {
-    bg_task->time_until = bg_task->time_interval + g_Ticks;
+    bg_task->time_until = bg_task->time_interval + G_TICKS;
     g_console_bg_task_list->add2list(&(g_console_bg_task_list->list), bg_task, sizeof(Bg_task_t), bg_task->task.task_name, strlen(bg_task->task.task_name));
 }
 
@@ -187,10 +187,10 @@ int task_handler(uint8_t *submit, uint16_t submit_len)
 static void task_timeout_handler(void* task_handle)
 {
     Bg_task_t* bg_task = (Bg_task_t*)task_handle;
-    if (g_Ticks == bg_task->time_until)
+    if (G_TICKS == bg_task->time_until)
     {
         bg_task->task.task_func(0, NULL);
-        bg_task->time_until = bg_task->time_interval + g_Ticks;
+        bg_task->time_until = bg_task->time_interval + G_TICKS;
     }
 }
 

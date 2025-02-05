@@ -3,13 +3,17 @@
  * @Date         : 2025-01-21 16:30:58
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-01-24 13:58:15
+ * @LastEditTime : 2025-02-05 18:33:24
  * @Description  : 可移植层，针对不同的平台实现规定的硬件api
  */
 
 #include "stm32f10x.h"
 #include "hardware.h"
 #include "config.h"
+
+#if USE_PRIVATE_TICKS
+volatile uint32_t g_Ticks = 0;              /* 全局滴答计数 */
+#endif  // USE_PRIVATE_TICKS
 
 void __USER init_timebase(void)
 {
@@ -92,11 +96,33 @@ void __USER console_uart_send_data(uint8_t data)
 
 void delay_ms(uint32_t ms)
 {
-    uint32_t start = g_Ticks;
-    while (g_Ticks - start < ms);
+    uint32_t start = G_TICKS;
+    while (G_TICKS - start < ms);
 }
 
 void running_led_blink(void)
 {
     GPIO_WriteBit(STATUS_LED_PORT, STATUS_LED_PIN, !GPIO_ReadOutputDataBit(STATUS_LED_PORT, STATUS_LED_PIN));
 }
+
+uint32_t __USER get_ticks(void)
+{
+#if USE_PRIVATE_TICKS
+    return g_Ticks;
+#else
+    // __USER get ticks;
+    /* don't use private ticks */
+#endif
+}
+
+void __USER inc_ticks(void)
+{
+#if USE_PRIVATE_TICKS
+    g_Ticks++;
+#else
+    // __USER increase ticks;
+    /* don't use private ticks */
+#endif
+}
+
+
