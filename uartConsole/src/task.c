@@ -187,7 +187,8 @@ int task_handler(uint8_t *submit, uint16_t submit_len)
 static void task_timeout_handler(void* task_handle)
 {
     Bg_task_t* bg_task = (Bg_task_t*)task_handle;
-    if (G_TICKS == bg_task->time_until)
+    if ((G_TICKS >= bg_task->time_until) &&
+        ((G_TICKS - 10) <= bg_task->time_until))
     {
         bg_task->task.task_func(0, NULL);
         bg_task->time_until = bg_task->time_interval + G_TICKS;
