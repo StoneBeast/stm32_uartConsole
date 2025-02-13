@@ -3,7 +3,7 @@
  * @Date         : 2025-01-22 10:14:12
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-02-05 10:24:52
+ * @LastEditTime : 2025-02-13 18:58:23
  * @Description  : 通用链表管理工具
  */
 
@@ -25,6 +25,7 @@ typedef struct
                       unsigned short id_len);
     void *(*find_by_index)(link_list_handle_t list, short index);
     void *(*find_by_id)(link_list_handle_t list, void *id, unsigned short id_len);
+    void *(*find_by_pos)(link_list_handle_t *list, short pos);
     void  (*delete_by_id)(link_list_handle_t *list, void *id);
     void  (*foreach)(link_list_handle_t list, void (*callback)(void* vendor_data));
 } link_list_manager;

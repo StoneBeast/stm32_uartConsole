@@ -3,7 +3,7 @@
  * @Date         : 2025-01-22 10:14:12
  * @Encoding     : UTF-8
  * @LastEditors  : stoneBeast
- * @LastEditTime : 2025-02-05 09:40:48
+ * @LastEditTime : 2025-02-13 18:21:10
  * @Description  : 通用链表管理工具
  */
 
@@ -102,6 +102,27 @@ static void *link_list_find_by_id(link_list_handle_t list, void *id, unsigned sh
     }
 }
 
+static void* link_list_find_by_pos(link_list_handle_t *list, short pos)
+{
+    link_list* list_p = (link_list*)(*list);
+    short i = 0;
+
+    if (pos < ((link_list_manager*)list)->node_number)
+    {
+        list_p = list_p->next;
+
+        while (i != pos)
+        {
+            list_p = list_p->next;
+            i++;
+        }
+
+        return list_p->vendor_data;
+    }
+
+    return NULL; 
+}
+
 static void link_list_delete_by_id(link_list_handle_t *list, void *id)
 {
     link_list* list_p = (link_list*)(*list);
@@ -168,6 +189,7 @@ link_list_manager *link_list_manager_get(void)
     manager->add2list = link_list_add;
     manager->find_by_index = link_list_find_by_index;
     manager->find_by_id = link_list_find_by_id;
+    manager->find_by_pos = link_list_find_by_pos;
     manager->delete_by_id = link_list_delete_by_id;
     manager->foreach = link_list_foreach;
 
